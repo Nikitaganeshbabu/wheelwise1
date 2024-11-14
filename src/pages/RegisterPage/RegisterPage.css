@@ -122,7 +122,7 @@
   }
     .register-form .footer-links {
     display: flex;
-    justify-content: flex-start; /* Align to the left */
+    justify-content: flex-start; 
     margin-top: 20px;
   }
   

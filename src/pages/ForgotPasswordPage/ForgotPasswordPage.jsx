@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './ForgotPasswordPage.css';
 
 const ForgotPasswordPage = () => {
-  const [step, setStep] = useState(1); // Step 1: Enter Email, Step 2: Enter OTP & New Password
+  const [step, setStep] = useState(1); 
   const [email, setEmail] = useState('');
   const [otp, setOtp] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -10,14 +10,14 @@ const ForgotPasswordPage = () => {
 
   const handleEmailSubmit = (e) => {
     e.preventDefault();
-    // Logic for sending OTP to the entered email goes here
-    setStep(2); // Move to the OTP and password form
+
+    setStep(2); 
   };
 
   const handleOtpSubmit = (e) => {
     e.preventDefault();
     if (newPassword === confirmPassword) {
-      // Logic to reset password goes here
+      
       alert('Password Reset Successful');
     } else {
       alert('Passwords do not match');
