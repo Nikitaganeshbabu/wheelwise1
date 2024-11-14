@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../hooks/AuthProvider';
-import logo from '../../assets/logo.png'; // Adjust the path if needed
+import logo from '../../assets/logo.png';
 import './Header.css';
 
 const Header = () => {

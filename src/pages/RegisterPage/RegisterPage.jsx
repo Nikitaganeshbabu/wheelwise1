@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../hooks/AuthProvider';
+import { Link } from 'react-router-dom';
 import './RegisterPage.css';
 import ill from '../../assets/illustration.png';
 
@@ -18,19 +19,16 @@ const RegisterPage = () => {
     let valid = true;
     const newErrors = { name: '', email: '', password: '' };
 
-    // Validate Name
     if (!input.name) {
       newErrors.name = 'Name is required.';
       valid = false;
     }
 
-    // Validate Email
     if (!validateEmail(input.email)) {
       newErrors.email = 'Please enter a valid email address.';
       valid = false;
     }
 
-    // Validate Password
     if (input.password.length < 6) {
       newErrors.password = 'Password must be at least 6 characters.';
       valid = false;
@@ -39,12 +37,7 @@ const RegisterPage = () => {
     setErrors(newErrors);
 
     if (valid) {
-      // Save user data in localStorage after successful registration
-      const user = { name: input.name, email: input.email, password: input.password };
-      localStorage.setItem('user', JSON.stringify(user)); // Store user details
       register(input);
-      // Redirect user to login page after successful registration (optional)
-      // Example: history.push("/login");
     }
   };
 
@@ -58,7 +51,6 @@ const RegisterPage = () => {
       <div className="form-container">
         <form onSubmit={handleSubmit} className="register-form">
           <h2>Join Us</h2>
-
           <label>Name</label>
           <input
             type="text"
@@ -91,6 +83,11 @@ const RegisterPage = () => {
           {errors.password && <span className="error">{errors.password}</span>}
 
           <button type="submit">Register</button>
+
+          {/* Footer links */}
+          <div className="footer-links">
+            <Link to="/login" className="footer-link">Already have an account?</Link>
+          </div>
         </form>
       </div>
     </div>

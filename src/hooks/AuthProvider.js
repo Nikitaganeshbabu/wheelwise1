@@ -10,15 +10,15 @@ export const AuthProvider = ({ children }) => {
   const register = (userData) => {
     // Store user data in local storage
     localStorage.setItem('user', JSON.stringify(userData));
-    setUser(userData);
-    navigate('/');
+    setUser(null); // Reset user state for a new user
+    navigate('/login'); // Redirect to login page after successful registration
   };
 
   const login = (credentials) => {
     const storedUser = JSON.parse(localStorage.getItem('user'));
     if (storedUser && storedUser.email === credentials.email && storedUser.password === credentials.password) {
-      setUser(storedUser);
-      navigate('/');
+      setUser(storedUser); // Set logged-in user
+      navigate('/'); // Redirect to home or dashboard
     } else {
       alert('Invalid email or password');
     }
@@ -26,8 +26,8 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem('user');
-    navigate('/login');
+    localStorage.removeItem('user'); 
+    navigate('/login'); // Redirect to login page
   };
 
   return (
@@ -38,3 +38,4 @@ export const AuthProvider = ({ children }) => {
 };
 
 export const useAuth = () => useContext(AuthContext);
+

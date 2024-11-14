@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../hooks/AuthProvider';
-import './LoginPage.css'; // Assuming you have a CSS file similar to RegisterPage
-import ill from '../../assets/illustration.png'; // Add the same illustration for consistency
+import { Link } from 'react-router-dom';
+import './LoginPage.css';
+import ill from '../../assets/illustration.png';
 
 const LoginPage = () => {
   const { login } = useAuth();
@@ -15,15 +16,11 @@ const LoginPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const storedUser = JSON.parse(localStorage.getItem('user')); // Retrieve user from localStorage
+    const storedUser = JSON.parse(localStorage.getItem('user'));
 
     if (storedUser) {
-      // Validate login credentials
       if (storedUser.email === input.email && storedUser.password === input.password) {
-        // Successful login
         login(input);
-        // Redirect to dashboard or home page (optional)
-        // Example: history.push("/dashboard");
       } else {
         setError('Invalid email or password.');
       }
@@ -40,7 +37,6 @@ const LoginPage = () => {
       <div className="form-container">
         <form onSubmit={handleSubmit} className="login-form">
           <h2>Welcome Back</h2>
-
           <label>Email</label>
           <input
             type="email"
@@ -49,7 +45,6 @@ const LoginPage = () => {
             onChange={handleChange}
             required
           />
-
           <label>Password</label>
           <input
             type="password"
@@ -58,10 +53,18 @@ const LoginPage = () => {
             onChange={handleChange}
             required
           />
-
           {error && <span className="error">{error}</span>}
-
           <button type="submit">Login</button>
+          <div className="footer-links">
+  <div className="footer-left">
+    <Link to="/forgot-password" className="footer-link">Forgot Password</Link>
+  </div>
+  <div className="footer-right">
+    <Link to="/register" className="footer-link">Don't have an Account?</Link>
+  </div>
+</div>
+
+          
         </form>
       </div>
     </div>

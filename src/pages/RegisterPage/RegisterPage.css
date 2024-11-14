@@ -67,7 +67,7 @@
   }
   
   .register-form input {
-    margin-bottom: 12px; /* Adjust margin for a tighter spacing */
+    margin-bottom: 20px;
     padding: 12px;
     padding-right: 20px;
     border: 1px solid #ddd;
@@ -101,7 +101,7 @@
   .error {
     color: red;
     font-size: 12px;
-    margin-top: 2px; /* Reduced gap between input and error message */
+    margin-top: 5px;
   }
   
   @media (max-width: 768px) {
@@ -118,5 +118,23 @@
     .form-container {
       flex: 1;
     }
+  
+  }
+    .register-form .footer-links {
+    display: flex;
+    justify-content: flex-start; /* Align to the left */
+    margin-top: 20px;
+  }
+  
+  .footer-link {
+    color: #4CAF50;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    text-decoration: none;
+  }
+  
+  .footer-link:hover {
+    color: #45a049;
   }
   

@@ -13,13 +13,15 @@ function App() {
     <Router>
       <AuthProvider>
         <Header />
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-          <Route path="/home" element={<ProtectedRoute element={<HomePage />} />} />
-        </Routes>
+        <div className="page-content">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="/home" element={<ProtectedRoute element={<HomePage />} />} />
+          </Routes>
+        </div>
       </AuthProvider>
     </Router>
   );

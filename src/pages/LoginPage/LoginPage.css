@@ -119,3 +119,27 @@
         flex: 1;
     }
 }
+
+.footer-links {
+    display: flex;
+    justify-content: space-between; /* Align to left and right */
+    margin-top: 30px;
+  }
+  
+  .footer-left,
+  .footer-right {
+    display: flex;
+  }
+  
+  .footer-link {
+    color: #210c97;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    text-decoration: none;
+  }
+  
+  .footer-link:hover {
+    color: #386dbd;
+  }
+  
