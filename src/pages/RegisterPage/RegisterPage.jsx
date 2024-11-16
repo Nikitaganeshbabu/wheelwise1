@@ -1,26 +1,62 @@
 import React, { useState } from 'react';
-import { useAuth } from '../../hooks/AuthProvider';
 import { Link } from 'react-router-dom';
 import './RegisterPage.css';
 import ill from '../../assets/illustration.png';
 
 const RegisterPage = () => {
-  const { register } = useAuth();
-  const [input, setInput] = useState({ name: '', email: '', password: '' });
-  const [errors, setErrors] = useState({ name: '', email: '', password: '' });
+  const [input, setInput] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    contact: '',
+  });
+
+  const [errors, setErrors] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    contact: '',
+  });
+
+  const [passwordErrors, setPasswordErrors] = useState([]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
+   
     setInput((prev) => ({ ...prev, [name]: value }));
+
+   
+    setErrors((prevErrors) => ({ ...prevErrors, [name]: '' }));
+
+  
+    if (name === 'password') {
+      const errors = validatePassword(value);
+      setPasswordErrors(errors);
+    }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    let valid = true;
-    const newErrors = { name: '', email: '', password: '' };
 
-    if (!input.name) {
-      newErrors.name = 'Name is required.';
+    let valid = true;
+    const newErrors = {
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: '',
+      contact: '',
+    };
+
+    if (!input.firstName.trim()) {
+      newErrors.firstName = 'First Name is required.';
+      valid = false;
+    }
+
+    if (!input.lastName.trim()) {
+      newErrors.lastName = 'Last Name is required.';
       valid = false;
     }
 
@@ -29,19 +65,95 @@ const RegisterPage = () => {
       valid = false;
     }
 
-    if (input.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters.';
+    if (!input.password.trim()) {
+      newErrors.password = 'Password is required.';
+      valid = false;
+    } else {
+      const validationResult = validatePassword(input.password);
+      if (validationResult.length > 0) {
+        newErrors.password = 'Password must meet the requirements.';
+        valid = false;
+      }
+    }
+
+    if (!validateContact(input.contact)) {
+      newErrors.contact = 'Please enter a valid 10-digit contact number.';
       valid = false;
     }
 
     setErrors(newErrors);
 
     if (valid) {
-      register(input);
+      const formattedInput = {
+        firstname: input.firstName,
+        lastname: input.lastName,
+        email: input.email,
+        password: input.password,
+        contactNo: input.contact,
+      };
+
+      try {
+        const response = await fetch('http://localhost:8080/signup', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formattedInput),
+        });
+
+        if (!response.ok) {
+          const contentType = response.headers.get('content-type');
+          let errorMessage;
+
+          if (contentType && contentType.includes('application/json')) {
+            const errorData = await response.json();
+            errorMessage = errorData.message || 'Something went wrong';
+          } else {
+            errorMessage = await response.text();
+          }
+
+          throw new Error(errorMessage);
+        }
+
+        const data = await response.json();
+        console.log('Registration successful:', data);
+        alert('Registration successful!');
+
+        setInput({
+          firstName: '',
+          lastName: '',
+          email: '',
+          password: '',
+          contact: '',
+        });
+        setErrors({
+          firstName: '',
+          lastName: '',
+          email: '',
+          password: '',
+          contact: '',
+        });
+        setPasswordErrors([]);
+      } catch (error) {
+        console.error('Error during registration:', error.message);
+        alert('Registration failed: ' + error.message);
+      }
     }
   };
 
   const validateEmail = (email) => /\S+@\S+\.\S+/.test(email);
+
+  const validatePassword = (password) => {
+    const errors = [];
+    if (password.length < 6) errors.push('must be at least 6 characters.');
+    if (!/[A-Z]/.test(password)) errors.push('must include at least one uppercase ');
+    if (!/[a-z]/.test(password)) errors.push('must include at least one lowercase ');
+    if (!/\d/.test(password)) errors.push('must include at least one number');
+    if (!/[!@#$%^&*()]/.test(password)) errors.push('must include at least one special character');
+    return errors;
+  };
+
+  const validateContact = (contact) => /^\d{10}$/.test(contact);
 
   return (
     <div className="register-page">
@@ -49,17 +161,30 @@ const RegisterPage = () => {
         <img src={ill} alt="Register" className="register-image" />
       </div>
       <div className="form-container">
-        <form onSubmit={handleSubmit} className="register-form">
+        <form onSubmit={handleSubmit} className="register-form" noValidate autoComplete="off">
           <h2>Join Us</h2>
-          <label>Name</label>
+
+          <label>First Name</label>
           <input
             type="text"
-            name="name"
-            value={input.name}
+            name="firstName"
+            value={input.firstName}
             onChange={handleChange}
             required
+            noValidate
           />
-          {errors.name && <span className="error">{errors.name}</span>}
+          {errors.firstName && <span className="error">{errors.firstName}</span>}
+
+          <label>Last Name</label>
+          <input
+            type="text"
+            name="lastName"
+            value={input.lastName}
+            onChange={handleChange}
+            required
+            noValidate
+          />
+          {errors.lastName && <span className="error">{errors.lastName}</span>}
 
           <label>Email</label>
           <input
@@ -68,26 +193,53 @@ const RegisterPage = () => {
             value={input.email}
             onChange={handleChange}
             required
+            noValidate
           />
           {errors.email && <span className="error">{errors.email}</span>}
 
-          <label>Password</label>
+          <label>Contact Number</label>
           <input
-            type="password"
-            name="password"
-            value={input.password}
+            type="text"
+            name="contact"
+            value={input.contact}
             onChange={handleChange}
             required
-            minLength="6"
+            maxLength="10"
+            noValidate
           />
-          {errors.password && <span className="error">{errors.password}</span>}
+          {errors.contact && <span className="error">{errors.contact}</span>}
 
-          <button type="submit">Register</button>
+          <div className="password-field tooltip-container">
+  <label>Password</label>
+  <input
+    type="password"
+    name="password"
+    value={input.password}
+    onChange={handleChange}
+    required
+    noValidate
+    style={{ marginTop: '10px' }}
+  />
+  {passwordErrors.length > 0 && (
+    <div className="tooltip">
+      <div className="tooltip-arrow"></div>
+      <ul>
+        {passwordErrors.map((rule, index) => (
+          <li key={index}>{rule}</li>
+        ))}
+      </ul>
+    </div>
+  )}
+  {errors.password && <span className="error">{errors.password}</span>}
+</div>
 
-          {/* Footer links */}
-          <div className="footer-links">
-            <Link to="/login" className="footer-link">Already have an account?</Link>
-          </div>
+<button type="submit">Register</button>
+
+<div className="footer-links">
+  <Link to="/login" className="footer-link">Already have an account?</Link>
+</div>
+
+
         </form>
       </div>
     </div>

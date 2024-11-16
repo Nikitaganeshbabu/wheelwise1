@@ -4,31 +4,92 @@ import { useNavigate } from 'react-router-dom';
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')) || null);
+  const [user, setUser] = useState(null); 
   const navigate = useNavigate();
 
-  const register = (userData) => {
-    // Store user data in local storage
-    localStorage.setItem('user', JSON.stringify(userData));
-    setUser(null); // Reset user state for a new user
-    navigate('/login'); // Redirect to login page after successful registration
-  };
 
-  const login = (credentials) => {
-    const storedUser = JSON.parse(localStorage.getItem('user'));
-    if (storedUser && storedUser.email === credentials.email && storedUser.password === credentials.password) {
-      setUser(storedUser); // Set logged-in user
-      navigate('/'); // Redirect to home or dashboard
-    } else {
-      alert('Invalid email or password');
+  const register = async (userData) => {
+    try {
+      const response = await fetch('http://localhost:8080/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Registration failed');
+      }
+
+      const data = await response.json();
+      console.log('Registration successful:', data);
+      alert('Registration successful! Please log in.');
+      navigate('/login');
+    } catch (error) {
+      console.error('Error during registration:', error.message);
+      alert(`Registration failed: ${error.message}`);
     }
   };
 
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem('user'); 
-    navigate('/login'); // Redirect to login page
+  // Function to handle user login
+  const login = async (credentials) => {
+    try {
+      const response = await fetch('http://localhost:8080/signin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(credentials),
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Invalid email or password');
+      }
+  
+      const data = await response.json();
+      console.log('Login successful:', data);
+  
+      setUser(data); // Store user data in state
+      navigate('/'); 
+    } catch (error) {
+      console.error('Error during login:', error.message);
+      throw error;
+    }
   };
+  
+
+  // Function to handle user logout
+  const logout = async () => {
+    try {
+      const response = await fetch('http://localhost:8080/signout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: user.email,
+        }),
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Logout failed');
+      }
+  
+      const data = await response.json();
+      console.log('Logout successful:', data.message);
+  
+      setUser(null); 
+      navigate('/login'); 
+    } catch (error) {
+      console.error('Error during logout:', error.message);
+      alert(`Logout failed: ${error.message}`);
+    }
+  };
+  
 
   return (
     <AuthContext.Provider value={{ user, register, login, logout }}>
@@ -38,4 +99,3 @@ export const AuthProvider = ({ children }) => {
 };
 
 export const useAuth = () => useContext(AuthContext);
-

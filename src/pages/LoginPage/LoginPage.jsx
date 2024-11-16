@@ -1,31 +1,40 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../hooks/AuthProvider';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './LoginPage.css';
 import ill from '../../assets/illustration.png';
 
 const LoginPage = () => {
   const { login } = useAuth();
+  const navigate = useNavigate(); 
   const [input, setInput] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
 
+ 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setInput((prev) => ({ ...prev, [name]: value }));
+    
+
+    setError('');
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const storedUser = JSON.parse(localStorage.getItem('user'));
-
-    if (storedUser) {
-      if (storedUser.email === input.email && storedUser.password === input.password) {
-        login(input);
-      } else {
-        setError('Invalid email or password.');
-      }
-    } else {
-      setError('No registered user found.');
+    try {
+      // Call the login function from the AuthProvider
+      await login(input); // Pass credentials to login function
+  
+      // Only show alert after successful login
+      alert('Login successful!');
+      setInput({ email: '', password: '' });
+      setError(''); 
+  
+      
+      navigate('/');
+    } catch (error) {
+      console.error('Login error:', error.message);
+      setError(error.message); 
     }
   };
 
@@ -35,7 +44,7 @@ const LoginPage = () => {
         <img src={ill} alt="Login" className="login-image" />
       </div>
       <div className="form-container">
-        <form onSubmit={handleSubmit} className="login-form">
+        <form onSubmit={handleSubmit} className="login-form" autoComplete="off">
           <h2>Welcome Back</h2>
           <label>Email</label>
           <input
@@ -56,15 +65,13 @@ const LoginPage = () => {
           {error && <span className="error">{error}</span>}
           <button type="submit">Login</button>
           <div className="footer-links">
-  <div className="footer-left">
-    <Link to="/forgot-password" className="footer-link">Forgot Password</Link>
-  </div>
-  <div className="footer-right">
-    <Link to="/register" className="footer-link">Don't have an Account?</Link>
-  </div>
-</div>
-
-          
+            <div className="footer-left">
+              <Link to="/forgot-password" className="footer-link">Forgot Password</Link>
+            </div>
+            <div className="footer-right">
+              <Link to="/register" className="footer-link">Don't have an Account?</Link>
+            </div>
+          </div>
         </form>
       </div>
     </div>

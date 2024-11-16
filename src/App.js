@@ -13,7 +13,7 @@ function App() {
     <Router>
       <AuthProvider>
         <Header />
-        <div className="page-content">
+       
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
@@ -21,7 +21,7 @@ function App() {
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
             <Route path="/home" element={<ProtectedRoute element={<HomePage />} />} />
           </Routes>
-        </div>
+        
       </AuthProvider>
     </Router>
   );

@@ -1,0 +1,115 @@
+/* Overall styling */
+.home-page {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f7f7f7;
+    color: #333;
+  }
+  
+  .home-header {
+    background-color: #2e3a47;
+    color: #fff;
+    text-align: center;
+    padding: 50px 20px;
+  }
+  
+  .home-header h1 {
+    font-size: 3em;
+    margin: 0;
+  }
+  
+  .home-header p {
+    font-size: 1.2em;
+    margin: 10px 0 0;
+  }
+  
+  .home-main {
+    padding: 40px 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+  }
+  
+  .car-options, .locations, .special-offers {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .car-options h2, .locations h2, .special-offers h2 {
+    font-size: 2em;
+    margin-bottom: 20px;
+  }
+  
+  .car-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+  }
+  
+  .car-item h3 {
+    font-size: 1.5em;
+    color: #0073e6;
+  }
+  
+  .car-item p {
+    font-size: 1em;
+    color: #666;
+  }
+  
+  button {
+    background-color: #0073e6;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #005bb5;
+  }
+  
+  .btn-location, .btn-offers {
+    width: 100%;
+  }
+  
+  .footer-links {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  
+  .home-footer {
+    text-align: center;
+    background-color: #2e3a47;
+    color: #fff;
+    padding: 20px;
+    margin-top: 40px;
+  }
+  
+  .home-footer a {
+    color: #fff;
+    text-decoration: none;
+  }
+  
+  .home-footer a:hover {
+    text-decoration: underline;
+  }
+  
+
+  @media screen and (max-width: 768px) {
+    .home-main {
+      grid-template-columns: 1fr;
+    }
+  
+    .car-list {
+      grid-template-columns: 1fr;
+    }
+  }
+  
